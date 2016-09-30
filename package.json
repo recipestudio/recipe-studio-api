@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/harrisonlingren/myfood/issues"
   },
-  "homepage": "https://github.com/harrisonlingren/myfood#readme"
+  "homepage": "https://github.com/harrisonlingren/myfood#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0"
+  }
 }
