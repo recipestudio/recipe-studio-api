@@ -1,0 +1,21 @@
+<html>
+<head>
+  <title>My Food</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <h1>My Food</h1>
+  <hr />
+
+  <h3>Create a recipe</h3>
+  <form method="POST" action="http://localhost:3000/recipe/new">
+    <label>ID</label><input type="text" name="id" /><br />
+    <label>Name</label><input type="text" name="name" /><br />
+    <label>Ingredients</label><input type="text" name="ingredients" /><br />
+    <label>Picture URL</label><input type="text" name="picture" /><br />
+    <label>Author</label><input type="text" name="user" /><br /><br />
+    <input type="submit" name="submit" value="Submit" />
+  </form>
+  <br />
+</body>
+</html>
