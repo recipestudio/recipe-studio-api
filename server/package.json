@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "./node_modules/.bin/nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -15,11 +15,11 @@
   "bugs": {
     "url": "https://github.com/harrisonlingren/myfood/issues"
   },
-  "homepage": "https://github.com/harrisonlingren/myfood#readme",
+  "homepage": "https://harrisonlingren.github.io/myfood",
   "dependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
-    "mongodb": "^2.2.10",
+    "mongoose": "^4.6.2",
     "nodemon": "^1.10.2"
   }
 }
