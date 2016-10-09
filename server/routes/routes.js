@@ -1,5 +1,5 @@
 var router = function(app, db, models) {
-  // init models
+  var objID = db.Schema.ObjectId;
 
   // default route
   app.get('/', function(req, res) {
@@ -25,8 +25,6 @@ var router = function(app, db, models) {
       // code...
 
     // Create recipe object and send to database
-    // for later: var newRecipe = recipe(r_id, r_name, r_ingr, r_pic, r_author);
-
     var newRecipe = new models.Recipe({
       name: r_name,
       ingredients: r_ingr,
@@ -44,9 +42,7 @@ var router = function(app, db, models) {
       }
     });
 
-    // db.collection('recipes').save(newRecipe);
-
-    // Return success or fail
+    // Return stuff
     resp = 'You created a recipe with the following: \n' + JSON.stringify(save_resp);
     console.log(resp);
     res.json(save_resp);
@@ -54,31 +50,36 @@ var router = function(app, db, models) {
   });
 
   // read
-  app.post('/recipe/get', function(req, res) {
+  app.get('/recipe/:id', function(req, res) {
     var resp; // response
 
     // Get recipe id
-    if (req.body.id) {
-      var r_id = objID(req.body.id);
-    } else {
-      resp = 'Error: no recipe id was given!';
-      console.log(resp);
-      res.send(resp);
-      return false;
-    }
-    // Match with database
+    var r_id = objID(req.params.id);
 
-    var getData = db.collection('recipes').findOne({_id:r_id}, function(err, item) {
+    // Match with database
+    var getRecipe = function(r_id, callback) {
+       models.Recipe.find().where('_id', r_id)
+        .exec(function(err, items) {
+          callback(err, items);
+        });
+    };
+
+    var recipe = getRecipe(r_id, function(err, items) {
       if (err) {
-        console.log(err);
+        console.error(err);
         return null;
       }
-      console.log(item);
-      return item;
+      return items;
     });
 
+    // models.Recipe.findOne({_id:r_id}, function(err, item) {
+    //   if (err) return console.err(err);
+    //   console.log(JSON.stringify(item));
+    //   console.log(item);
+    // });
+
     // Send response with recipe data if exists, if not then send failure
-    resp = getData;
+    //resp = getData;
     console.log(resp);
 
     res.contentType('application/json');
@@ -86,22 +87,22 @@ var router = function(app, db, models) {
 
   });
 
-  app.get('/recipes', function(req, res) {
-    var resp = {};
+  app.get('/recipe/all', function(req, res) {
+    var recipes;
 
-    var getData = db.collection('recipes').find().toArray(function(err, item) {
+    models.Recipe.find(function(err, items) {
       if (err) {
-        console.log(err);
-        return {};
+        return console.error(err);
       } else {
-        console.log(item);
-        return item;
+        console.log(JSON.stringify(items));
+        recipes = JSON.stringify(items);
       }
     });
 
-    console.log(getData);
-    //res.json(resp);
-    res.send(getData);
+    console.log(recipes + '\n');
+    console.log(JSON.stringify(recipes));
+    res.json(recipes);
+    res.send(recipes)
   });
 
   // update
@@ -126,7 +127,6 @@ var router = function(app, db, models) {
 
     // Send response if successful or if failed
   });
-
 
   // test GET function
   app.get('/test', function(req, res) {
