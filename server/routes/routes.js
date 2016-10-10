@@ -93,19 +93,17 @@ var router = function(app, db, models) {
   });
 
   // delete
-  app.post('/recipe/delete', function(req, res) {
-    // Get recipe id, check with database
-
-    // Delete in database
-
-    // Send response if successful or if failed
-  });
-
-  // test GET function
-  app.get('/test', function(req, res) {
-    var q = req.query.q;
-    var response = 'Got the test query! It was: ' + q;
-    res.send(response);
+  app.delete('/recipe/delete/:id', function(req, res) {
+    // Get recipe id, check with database and delete
+    models.Recipe.remove({_id: req.params.id}, function(err) {
+      if (err) {
+        // Send response if successful or if failed
+        console.error(err);
+        res.send(err);
+      } else {
+        res.send("Success: " + req.params.id + " was deleted from records");
+      }
+    });
   });
 };
 
