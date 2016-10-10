@@ -12,14 +12,11 @@ var router = function(app, db, models) {
     var resp; // response
 
     // Get data from form
-    //var r_id = req.body.id;
     var r_name = req.body.name;
     var r_ingr = JSON.parse(req.body.ingredients);
     console.log(JSON.stringify(r_ingr));
     var r_pic = req.body.picture;
     var r_author = req.body.user;
-
-    //console.log('>  %s, %s, %s, %s', r_name, r_ingr, r_pic, r_author);
 
     // Sanitize and validate data
       // code...
@@ -36,9 +33,10 @@ var router = function(app, db, models) {
     newRecipe.save(function(err, item) {
       if (err) {
         console.error(err);
-        save_resp = {};
+        res.send(err);
       } else {
-        save_resp = item;
+        console.log("Successfully created record: " + newRecipe.id);
+        res.send("Successfully created record: " + newRecipe.id);
       }
     });
 
@@ -79,12 +77,17 @@ var router = function(app, db, models) {
   });
 
   // update
-  app.post('/recipe/update/:id', function(req, res) {
-    // Get recipe id, check with databased and update
-    models.Recipe.findByIdAndUpdate(req.params.id, function(err) {
+  app.put('/recipe/update/:id', function(req, res) {
+    // Get object containing updated params from request
+    update = req.body;
+
+    // match id with records and update
+    models.Recipe.findByIdAndUpdate(req.params.id, update, function(err) {
       if (err) {
         console.error(err);
+        res.send(err);
       } else {
+        console.log("Successfully updated record " + req.params.id);
         res.send("Successfully updated record " + req.params.id);
       }
     });
@@ -99,6 +102,7 @@ var router = function(app, db, models) {
         console.error(err);
         res.send(err);
       } else {
+        console.log("Successfully updated record " + req.params.id);
         res.send("Success: " + req.params.id + " was deleted from records");
       }
     });
