@@ -79,17 +79,15 @@ var router = function(app, db, models) {
   });
 
   // update
-  app.post('/recipe/update', function(req, res) {
-    // Get recipe id, check with database
-
-    // Get new data, sanitize and validate
-      // code...
-
-    // Create new recipe object
-
-    // Update with database
-
-    // Send response if successful or if failed
+  app.post('/recipe/update/:id', function(req, res) {
+    // Get recipe id, check with databased and update
+    models.Recipe.findByIdAndUpdate(req.params.id, function(err) {
+      if (err) {
+        console.error(err);
+      } else {
+        res.send("Successfully updated record " + req.params.id);
+      }
+    });
   });
 
   // delete
