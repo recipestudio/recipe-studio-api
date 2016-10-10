@@ -25,7 +25,7 @@ GET to `/recipe/all` for all records
 GET to `/recipe/id/:idNum` for a specific record, where `:idNum` is the record ID
 
 ### Updating records
-UPDATE to `/recipe/update/:idNum` to update a specific record, where `:idNum` is the record ID. The data sent should include the full record following the Recipe model posted above.
+PUT to `/recipe/update/:idNum` to update a specific record, where `:idNum` is the record ID. The data sent should include the full record following the Recipe model posted above.
 
 ### Deleting records
 DELETE to `/recipe/delete/:idNum` to delete a specific record, where `:idNum` is the record ID
