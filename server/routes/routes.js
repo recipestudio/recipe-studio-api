@@ -50,59 +50,32 @@ var router = function(app, db, models) {
   });
 
   // read
-  app.get('/recipe/:id', function(req, res) {
-    var resp; // response
-
+  app.get('/recipe/id/:id', function(req, res) {
     // Get recipe id
     var r_id = objID(req.params.id);
 
     // Match with database
-    var getRecipe = function(r_id, callback) {
-       models.Recipe.find().where('_id', r_id)
-        .exec(function(err, items) {
-          callback(err, items);
-        });
-    };
-
-    var recipe = getRecipe(r_id, function(err, items) {
+    models.Recipe.findById(r_id, function(err, recipe) {
       if (err) {
         console.error(err);
-        return null;
+        res.send(err);
+      } else {
+        console.log("Results: ", recipe);
+        res.json(recipe)
       }
-      return items;
     });
-
-    // models.Recipe.findOne({_id:r_id}, function(err, item) {
-    //   if (err) return console.err(err);
-    //   console.log(JSON.stringify(item));
-    //   console.log(item);
-    // });
-
-    // Send response with recipe data if exists, if not then send failure
-    //resp = getData;
-    console.log(resp);
-
-    res.contentType('application/json');
-    res.json(resp);
-
   });
 
   app.get('/recipe/all', function(req, res) {
-    var recipes;
-
-    models.Recipe.find(function(err, items) {
+    models.Recipe.find(function(err, recipes) {
       if (err) {
-        return console.error(err);
+        console.error(err);
+        res.send(err);
       } else {
-        console.log(JSON.stringify(items));
-        recipes = JSON.stringify(items);
+        console.log("Fetched: \n" + JSON.stringify(recipes) + "\n");
+        res.json(recipes);
       }
     });
-
-    console.log(recipes + '\n');
-    console.log(JSON.stringify(recipes));
-    res.json(recipes);
-    res.send(recipes)
   });
 
   // update
