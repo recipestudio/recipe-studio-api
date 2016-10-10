@@ -52,15 +52,15 @@ var router = function(app, db, models) {
   // read
   app.get('/recipe/id/:id', function(req, res) {
     // Get recipe id
-    var r_id = objID(req.params.id);
+    console.log("Requested id: \n" + req.params.id + "\n");
 
     // Match with database
-    models.Recipe.findById(r_id, function(err, recipe) {
+    models.Recipe.findById(req.params.id, function(err, recipe) {
       if (err) {
         console.error(err);
         res.send(err);
       } else {
-        console.log("Results: ", recipe);
+        console.log("Results: \n" + JSON.stringify(recipe) + "\n");
         res.json(recipe)
       }
     });
