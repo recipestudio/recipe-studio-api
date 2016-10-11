@@ -14,7 +14,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   var models = require('./models/models.js')(mongoose);
   var routes = require('./routes/routes.js')(app, mongoose, models);
-  var server = app.listen(3000, function() {
+  var server = app.listen(80, function() {
     console.log('Listening on port %s...', server.address().port);
   });
 });
