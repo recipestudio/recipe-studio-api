@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "dev": "./node_modules/.bin/nodemon app.js"
+    "start": "node ctrl.js start",
+    "stop": "node ctrl.js stop"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   "homepage": "https://harrisonlingren.github.io/myfood",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "daemonize2": "^0.4.2",
     "express": "^4.14.0",
     "mongoose": "^4.6.2",
     "nodemon": "^1.10.2"
