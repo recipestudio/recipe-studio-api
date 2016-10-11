@@ -2,13 +2,13 @@ var router = function(app, db, models) {
   var objID = db.Schema.ObjectId;
 
   // default route
-  app.get('/', function(req, res) {
+  app.get('/v1', function(req, res) {
     res.send('MyFood server is running!');
   });
 
   // RECIPE ENDPOINTS
   // create
-  app.post('/recipe/new', function(req, res) {
+  app.post('/v1/recipe/new', function(req, res) {
     var resp; // response
 
     // Get data from form
@@ -48,7 +48,7 @@ var router = function(app, db, models) {
   });
 
   // read
-  app.get('/recipe/id/:id', function(req, res) {
+  app.get('/v1/recipe/id/:id', function(req, res) {
     // Get recipe id
     console.log("Requested id: \n" + req.params.id + "\n");
 
@@ -64,7 +64,7 @@ var router = function(app, db, models) {
     });
   });
 
-  app.get('/recipe/all', function(req, res) {
+  app.get('/v1/recipe/all', function(req, res) {
     models.Recipe.find(function(err, recipes) {
       if (err) {
         console.error(err);
@@ -77,7 +77,7 @@ var router = function(app, db, models) {
   });
 
   // update
-  app.put('/recipe/update/:id', function(req, res) {
+  app.put('/v1/recipe/update/:id', function(req, res) {
     // Get object containing updated params from request
     update = req.body;
 
@@ -94,7 +94,7 @@ var router = function(app, db, models) {
   });
 
   // delete
-  app.delete('/recipe/delete/:id', function(req, res) {
+  app.delete('/v1/recipe/delete/:id', function(req, res) {
     // Get recipe id, check with database and delete
     models.Recipe.remove({_id: req.params.id}, function(err) {
       if (err) {
