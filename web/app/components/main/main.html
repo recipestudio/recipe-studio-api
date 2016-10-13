@@ -1,0 +1,15 @@
+ <div class="container">
+    <h1>My Food</h1>
+    <hr />
+
+    <h3>Create a recipe</h3>
+    <form >
+        <label>ID</label><input type="text" ng-model="state.id" /><br />
+        <label>Name</label><input type="text" ng-model="state.name" /><br />
+        <label>Ingredients</label><input type="text" ng-model="state.ingredients" /><br />
+        <label>Picture URL</label><input type="text" ng-model="state.picture" /><br />
+        <label>Author</label><input type="text" ng-model="state.user" /><br /><br />
+        <button ng-click="service.createRecipe(state)" type="button">Submit</button>
+    </form>
+    <br />
+ </div>
