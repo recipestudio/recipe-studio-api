@@ -7,16 +7,16 @@ POST to `/recipe/create` in the following schema model:
 
 ```{
   name            :   String
-  ingredients   :   [  
+  ingredients     :   [  
     {
-      name          :   String
-      ingredient    :   String
-      quantity      :   Number
-      measure       :   String
+      name        :   String
+      ingredient  :   String
+      quantity    :   Number
+      measure     :   String
     }, {more ingredients....}
   ]
-  picture       :   String
-  author        :   String
+  picture         :   String
+  author          :   String
 }
 ```
 
