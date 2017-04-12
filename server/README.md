@@ -17,7 +17,8 @@ POST to `/recipe/create` in the following schema model:
   ]
   picture       :   String
   author        :   String
-}```
+}
+```
 
 ### Reading records
 GET to `/recipe/all` for all records
