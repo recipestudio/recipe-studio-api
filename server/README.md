@@ -2,7 +2,7 @@
 
 ## API endpoints
 
-API URL: `https://api.myrecipes.pw`
+API URL: `api.myrecipes.pw`
 
 ### Creating records
 POST to `/recipe/create` in the following schema model:
