@@ -1,0 +1,26 @@
+{
+  "name": "myrecipes-web",
+  "version": "1.0.0",
+  "description": "Save recipes online",
+  "main": "pages/index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harrisonlingren/myrecipes.git"
+  },
+  "author": "harrisonlingren@gmail.com",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/harrisonlingren/myrecipes/issues"
+  },
+  "homepage": "https://github.com/harrisonlingren/myrecipes#readme",
+  "dependencies": {
+    "next": "^2.1.1",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
+  }
+}
