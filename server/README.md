@@ -1,8 +1,8 @@
-# myfood-server
+# MyRecipes, server
 
 ## API endpoints
 
-API URL: `api.myrecipes.pw`
+API URL: [`api.myrecipes.pw`](http://api.myrecipes.pw)
 
 ### Creating records
 POST to `/recipe/create` in the following schema model:
@@ -32,3 +32,12 @@ PUT to `/recipe/update/:idNum` to update a specific record, where `:idNum` is th
 
 ### Deleting records
 DELETE to `/recipe/delete/:idNum` to delete a specific record, where `:idNum` is the record ID
+
+
+
+
+
+
+
+---
+Ingredients API will eventually be fed from here: https://ndb.nal.usda.gov/ndb/doc/apilist/API-FOOD-REPORT.md
