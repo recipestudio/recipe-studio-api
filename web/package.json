@@ -20,6 +20,7 @@
   "homepage": "https://github.com/harrisonlingren/myrecipes#readme",
   "dependencies": {
     "next": "^2.1.1",
+    "pm2": "^2.4.4",
     "react": "^15.5.4",
     "react-dom": "^15.5.4"
   }
