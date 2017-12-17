@@ -51,7 +51,7 @@ router.post('/new', (req, res) => {
     'email': req.body.email,
     'name': req.body.name || req.body.email,
     'password': req.body.password
-  }
+  };
 
   admin.auth().createUser({
     email: newUserData.email,
