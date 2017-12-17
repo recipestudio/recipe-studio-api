@@ -18,4 +18,9 @@ router.get('/:id', (req, res) => {
   );
 });
 
+// POST create new ingredient
+router.post('/new', (req, res) => {
+  // create new ingredient
+});
+
 module.exports = router;

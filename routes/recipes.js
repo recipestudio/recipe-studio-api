@@ -27,4 +27,19 @@ router.get('/:id', (req, res) => {
   );
 });
 
+// POST create new recipe
+router.post('/new', (req, res) => {
+
+});
+
+// PUT edit recipe
+router.put('/:id', (req, res) => {
+
+});
+
+// DELETE recipe
+router.delete('/:id', (req, res) => {
+
+});
+
 module.exports = router;
