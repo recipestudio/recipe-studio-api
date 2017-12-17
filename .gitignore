@@ -58,3 +58,5 @@ typings/
 .env
 
 .travis.yml
+
+package-lock.json
