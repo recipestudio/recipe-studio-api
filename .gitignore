@@ -60,5 +60,3 @@ typings/
 .travis.yml
 
 package-lock.json
-
-firebaseadmin.json
