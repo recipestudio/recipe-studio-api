@@ -5,7 +5,7 @@
 API URL: [`api.myrecipes.pw/v1`](http://api.myrecipes.pw/v1)
 
 ### Creating records
-POST to `/recipe/create` in the following schema model:
+POST to `/recipe/new` in the following schema model:
 
 ```{
   name            :   String
@@ -25,13 +25,13 @@ POST to `/recipe/create` in the following schema model:
 ### Reading records
 GET to `/recipe/all` for all records
 
-GET to `/recipe/id/:idNum` for a specific record, where `:idNum` is the record ID
+GET to `/recipe/:idNum` for a specific record, where `:idNum` is the record ID
 
 ### Updating records
-PUT to `/recipe/update/:idNum` to update a specific record, where `:idNum` is the record ID. The data sent should include the full record following the Recipe model posted above.
+PUT to `/recipe/:idNum` to update a specific record, where `:idNum` is the record ID. The data sent should include the full record following the Recipe model posted above.
 
 ### Deleting records
-DELETE to `/recipe/delete/:idNum` to delete a specific record, where `:idNum` is the record ID
+DELETE to `/recipe/:idNum` to delete a specific record, where `:idNum` is the record ID
 
 
 
