@@ -22,14 +22,6 @@ router.get('/', (req, res) => {
 
 // GET user by :id
 router.get('/:id', (req, res) => {
-  /* res.status(200).json(
-    {
-      'id': (req.params.id),
-      'name': 'userName',
-      'created': 'userCreatedDate'
-    }
-  ); */
-
   let uid = req.params.id;
 
   admin.auth().getUser(uid)

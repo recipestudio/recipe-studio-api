@@ -12,7 +12,7 @@ if (!db_conn_str) {
   console.log('Connection string: ', db_conn_str);
 }
 
-var APIurl = 'http://localhost:5000/';
+var APIurl = 'http://api.recipe.studio/';
 
 // GET: default
 router.get('/', (req, res, next) => {
