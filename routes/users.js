@@ -35,7 +35,6 @@ router.get('/:id', (req, res) => {
   admin.auth().getUser(uid)
   .then(function(userRecord) {
     // See the UserRecord reference doc for the contents of userRecord.
-    console.log("Successfully fetched user data:", userRecord.toJSON());
     res.status(200).json(userRecord.toJSON());
   })
   .catch(function(error) {
@@ -62,7 +61,6 @@ router.post('/new', (req, res) => {
   })
     .then(function(userRecord) {
       // See the UserRecord reference doc for the contents of userRecord.
-      //console.log("Successfully created new user:", userRecord.uid);
       res.status(201).json(userRecord.toJSON());
     })
     .catch(function(error) {

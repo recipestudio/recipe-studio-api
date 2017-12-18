@@ -51,10 +51,7 @@ function mongoPost(req, res, next) {
           assert.equal(1, result.insertedCount);
           
           // send response data
-          let resData = {
-            'message': 'Ingredient created!',
-            'data': newItem
-          }; res.status(201).json(resData);
+          res.status(201).json(newItem);
       });
 
       db.close();
@@ -88,10 +85,8 @@ function mongoGet(req, res, next) {
             res.status(404).json({ 'message': 'Ingredient ' + iid + ' not found' });
 
           } else {
-            let resData = {
-              message: 'Ingredient '+iid,
-              data: ingredient
-            }; res.status(200).json(resData);
+            // send response data
+            res.status(200).json(ingredient);
           }
       });
 
@@ -115,10 +110,12 @@ function mongoGetAll(req, res, next) {
       db.db('recipe-studio')
         .collection('ingredients')
         .find({}).toArray((err, ingredients) => {
-          let resData = {
-            message: 'All ingredients',
-            data: ingredients
-          }; res.status(200).json(resData);
+          // send response data
+          if (err) {
+            res.status(500).json( {'message': 'Error getting data', 'error': err} );
+          } else {
+            res.status(200).json(resData);
+          }
       });
 
       db.close();

@@ -56,6 +56,6 @@ typings/
 
 # dotenv environment variables file
 .env
-
+Procfile
 package-lock.json
 .jshintrc
