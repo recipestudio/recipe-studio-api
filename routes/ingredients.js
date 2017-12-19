@@ -114,7 +114,7 @@ function mongoGetAll(req, res, next) {
           if (err) {
             res.status(500).json( {'message': 'Error getting data', 'error': err} );
           } else {
-            res.status(200).json(resData);
+            res.status(200).json(ingredients);
           }
       });
 

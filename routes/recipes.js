@@ -216,6 +216,8 @@ function mongoPut(req, res, next) {
 }
 
 function formObject(req) {
+  console.log('input: ', req.body);
+
   let objFields = {};
   if (req.body.name) { objFields.name = req.body.name; }
   if (req.body.directions) { objFields.directions = req.body.directions; }
