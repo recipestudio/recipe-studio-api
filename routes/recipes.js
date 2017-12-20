@@ -12,7 +12,7 @@ if (!db_conn_str) {
   console.log('Connection string: ', db_conn_str);
 }
 
-var APIurl = 'http://api.recipe.studio/';
+var APIurl = 'http://localhost:5000/';
 
 // GET: default
 router.get('/', (req, res, next) => {
@@ -85,10 +85,7 @@ function mongoGetAll(req, res, next) {
       db.db('recipe-studio')
         .collection('recipes')
         .find({}).toArray((err, recipes) => {
-          let resData = {
-            message: 'All recipes',
-            data: recipes
-          }; res.status(200).json(resData);
+          res.status(200).json(recipes);
       });
 
       db.close();
