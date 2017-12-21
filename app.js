@@ -32,6 +32,7 @@ app.use("/", index);
 app.use("/user", users);
 app.use("/recipe", recipes);
 app.use("/ingredient", ingredients);
+app.use("/search", search);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
