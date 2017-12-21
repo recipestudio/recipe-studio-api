@@ -8,6 +8,7 @@ var index = require("./routes/index");
 var users = require("./routes/users");
 var recipes = require("./routes/recipes");
 var ingredients = require("./routes/ingredients");
+var search = require("./routes/search");
 
 var app = express();
 
