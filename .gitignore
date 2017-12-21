@@ -56,7 +56,6 @@ typings/
 
 # dotenv environment variables file
 .env
-
-.travis.yml
-
+Procfile
 package-lock.json
+.jshintrc
