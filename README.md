@@ -1,8 +1,8 @@
-# MyRecipes, server
+# Recipe Studio, server
 
 ## API endpoints
 
-API URL: [`api.myrecipes.pw/v1`](http://api.myrecipes.pw/v1)
+API URL: [`https://api.recipe.studio`](https://api.recipe.studio)
 
 ### Creating records
 POST to `/recipe/new` in the following schema model:
@@ -11,14 +11,13 @@ POST to `/recipe/new` in the following schema model:
   name            :   String
   ingredients     :   [  
     {
-      name        :   String
-      ingredient  :   String
+      ingredient  :   String (ingredient ID)
       quantity    :   Number
-      measure     :   String
+      units       :   String
     }, {more ingredients....}
   ]
-  picture         :   String
-  author          :   String
+  image           :   String
+  author          :   String (user ID)
 }
 ```
 
