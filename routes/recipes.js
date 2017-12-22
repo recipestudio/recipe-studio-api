@@ -12,15 +12,13 @@ if (!db_conn_str) {
   console.log("Connection string: ", db_conn_str);
 }
 
-var APIurl = "http://localhost:5000/";
+const APIurl = "https://api.recipe.studio/";
 
 // GET: default
 router.get("/", (req, res, next) => {
-  res
-    .status(400)
-    .json({
-      message: "No recipe id was sent. Use /recipe/all for all recipes"
-    });
+  res.status(400).json({
+    message: "No recipe id was sent. Use /recipe/all for all recipes"
+  });
 });
 
 // GET: get all recipes
@@ -79,24 +77,59 @@ function mongoGet(req, res, next) {
 
 // DB read all function
 function mongoGetAll(req, res, next) {
-  // connect to db
-  try {
-    MongoClient.connect(db_conn_str, (err, db) => {
-      assert.equal(null, err, "Could not connect to db");
+  // check if getting user recipes
+  if (req.query.user) {
+    console.log("Getting recipes for: ", req.query.user);
+    let userId = req.query.user;
+    // connect to db
+    try {
+      MongoClient.connect(db_conn_str, (err, db) => {
+        if (err) {
+          console.error(err);
+          res
+            .status(500)
+            .json({ message: "Error connecting to database", error: err });
+        } else {
+          db
+            .db("recipe-studio")
+            .collection("recipes")
+            .find({ "author.uid": userId })
+            .toArray((err, recipes) => {
+              if (err) {
+                console.error(err);
+                res.status(500).json({ error: err });
+              }
+              console.log(recipes);
+              res.status(200).json(recipes);
+            });
 
-      db
-        .db("recipe-studio")
-        .collection("recipes")
-        .find({})
-        .toArray((err, recipes) => {
-          res.status(200).json(recipes);
-        });
+          db.close();
+        }
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Error getting recipes", error: err });
+    }
+  } else {
+    // connect to db
+    try {
+      MongoClient.connect(db_conn_str, (err, db) => {
+        assert.equal(null, err, "Could not connect to db");
 
-      db.close();
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Error fetching recipes", error: err });
+        db
+          .db("recipe-studio")
+          .collection("recipes")
+          .find({})
+          .toArray((err, recipes) => {
+            res.status(200).json(recipes);
+          });
+
+        db.close();
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Error fetching recipes", error: err });
+    }
   }
 }
 
