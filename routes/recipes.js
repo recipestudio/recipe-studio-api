@@ -272,7 +272,7 @@ function formObject(req) {
     objFields.directions = req.body.directions;
   }
   if (req.body.description) {
-    objFields.description = req.body.directions;
+    objFields.description = req.body.description;
   }
   if (req.method == "POST") {
     // set initial image
