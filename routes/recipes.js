@@ -271,7 +271,15 @@ function formObject(req) {
   if (req.body.directions) {
     objFields.directions = req.body.directions;
   }
+  if (req.body.description) {
+    objFields.description = req.body.directions;
+  }
   if (req.method == "POST") {
+    // set initial image
+    objFields.image = !req.body.image
+      ? "http://via.placeholder.com/600x400"
+      : req.body.image;
+
     // Promise for new object
     return new Promise((resolve, reject) => {
       // set date
