@@ -8,8 +8,6 @@ var MongoClient = require("mongodb").MongoClient;
 var db_conn_str = process.env.DB_CONN_STR;
 if (!db_conn_str) {
   console.error("DB_CONN_STR variable not set!");
-} else {
-  console.log("Connection string: ", db_conn_str);
 }
 
 const APIurl = "https://api.recipe.studio/";
@@ -23,6 +21,9 @@ router.get("/", (req, res, next) => {
 
 // GET: get all recipes
 router.get("/all", mongoGetAll);
+
+// GET: get recipes from search
+router.get("/search", mongoSearch);
 
 // GET: get recipe by :id
 router.get("/:id", mongoGet);
@@ -77,59 +78,72 @@ function mongoGet(req, res, next) {
 
 // DB read all function
 function mongoGetAll(req, res, next) {
+  // connect to db
+  try {
+    MongoClient.connect(db_conn_str, (err, db) => {
+      assert.equal(null, err, "Could not connect to db");
+
+      db
+        .db("recipe-studio")
+        .collection("recipes")
+        .find({})
+        .toArray((err, recipes) => {
+          res.status(200).json(recipes);
+        });
+
+      db.close();
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error fetching recipes", error: err });
+  }
+}
+
+function mongoSearch(req, res, next) {
   // check if getting user recipes
+  let searchObj = {};
   if (req.query.user) {
-    console.log("Getting recipes for: ", req.query.user);
-    let userId = req.query.user;
-    // connect to db
-    try {
-      MongoClient.connect(db_conn_str, (err, db) => {
-        if (err) {
-          console.error(err);
-          res
-            .status(500)
-            .json({ message: "Error connecting to database", error: err });
-        } else {
-          db
-            .db("recipe-studio")
-            .collection("recipes")
-            .find({ "author.uid": userId })
-            .toArray((err, recipes) => {
-              if (err) {
-                console.error(err);
-                res.status(500).json({ error: err });
-              }
-              console.log(recipes);
-              res.status(200).json(recipes);
-            });
+    searchObj["author.uid"] = req.query.user;
+  }
 
-          db.close();
-        }
-      });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: "Error getting recipes", error: err });
-    }
-  } else {
-    // connect to db
-    try {
-      MongoClient.connect(db_conn_str, (err, db) => {
-        assert.equal(null, err, "Could not connect to db");
+  if (req.query.servings) {
+    searchObj.servings = req.query.servings;
+  }
 
+  if (req.query.ingredients) {
+    let ingQuery = req.query.ingredients;
+    ingQuery = ingQuery.split(",");
+
+    searchObj["ingredients.data._id"] = { $all: ingQuery };
+  }
+
+  // connect to db
+  try {
+    MongoClient.connect(db_conn_str, (err, db) => {
+      if (err) {
+        console.error(err);
+        res
+          .status(500)
+          .json({ message: "Error connecting to database", error: err });
+      } else {
         db
           .db("recipe-studio")
           .collection("recipes")
-          .find({})
+          .find(searchObj)
           .toArray((err, recipes) => {
+            if (err) {
+              console.error(err);
+              res.status(500).json({ error: err });
+            }
             res.status(200).json(recipes);
           });
 
         db.close();
-      });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: "Error fetching recipes", error: err });
-    }
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error getting recipes", error: err });
   }
 }
 
@@ -140,7 +154,6 @@ function mongoDel(req, res, next) {
   // check for correct ID length
   let rid = req.params.id;
   if (rid.length != 24) {
-    console.log("nope");
     res.status(400).json({ message: "Invalid recipe ID" });
     return;
   }
@@ -170,11 +183,8 @@ function mongoDel(req, res, next) {
 // DB create function
 function mongoPost(req, res, next) {
   let d = new Date();
-  console.log("creating at ", d);
 
-  console.log("starting promise chain...");
   formObject(req).then(newObj => {
-    console.log("new: ", newObj);
     // connect to DB here
     try {
       MongoClient.connect(db_conn_str, (err, db) => {
@@ -221,9 +231,8 @@ function mongoPut(req, res, next) {
     res.status(400).json({ message: "Invalid recipe ID" });
     return;
   }
-  console.log("starting promise...");
+
   formObject(req).then(updateObj => {
-    console.log("update: ", updateObj);
     // connect to db
     try {
       MongoClient.connect(db_conn_str, (err, db) => {
@@ -240,13 +249,11 @@ function mongoPut(req, res, next) {
                   .status(500)
                   .json({ message: "Error while updating", error: err });
               } else {
-                console.log("fetching updated data");
                 fetch(APIurl + "recipe/" + rid)
                   .then(res => {
                     return res.json();
                   })
                   .then(data => {
-                    console.log("sending updated data");
                     res.status(200).json(data);
                   });
               }
@@ -262,8 +269,6 @@ function mongoPut(req, res, next) {
 }
 
 function formObject(req) {
-  console.log("input: ", req.body);
-
   let objFields = {};
   if (req.body.name) {
     objFields.name = req.body.name;
@@ -330,7 +335,6 @@ function validateAuthor(uid) {
   let author = {};
 
   return new Promise((resolve, reject) => {
-    console.log("in the promise...");
     fetch(APIurl + "user/" + uid)
       .then(res => {
         return res.json();
@@ -353,8 +357,6 @@ function validateIngredients(ingredients_array) {
   let ingredients = [];
   let requests = [];
 
-  console.log("in the promise...");
-
   // for each ingredient, create a promise to get ingredient data and
   //   push new data to array of objects with embedded old data.
   ingredients_array.forEach(i => {
@@ -375,10 +377,8 @@ function validateIngredients(ingredients_array) {
   });
 
   return new Promise((resolve, reject) => {
-    console.log("executing all fetch requests");
     // execute all promises
     Promise.all(requests).then(() => {
-      console.log("resolving the promise");
       resolve(ingredients);
       reject({});
     });
