@@ -27,8 +27,13 @@ router.get("/:id", (req, res) => {
     .auth()
     .getUser(uid)
     .then(function(userRecord) {
-      // See the UserRecord reference doc for the contents of userRecord.
-      res.status(200).json(userRecord.toJSON());
+      let userObj = {
+        uid: userRecord.uid,
+        displayName: userRecord.displayName,
+        creationTime: userRecord.metadata.creationTime
+      };
+
+      res.status(200).json(userObj);
     })
     .catch(function(error) {
       console.log("Error fetching user data:", error);
