@@ -16,7 +16,8 @@ POST to `/recipe/new` in the following schema model:
       units       :   String
     }, {more ingredients....}
   ]
-  image           :   String
+  image           :   String,
+  description     :   String,
   author          :   String (user ID)
 }
 ```
