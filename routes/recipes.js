@@ -2,7 +2,6 @@ var express = require("express");
 var router = express.Router();
 
 var assert = require("assert");
-var fetch = require("node-fetch");
 
 var MongoClient = require("mongodb").MongoClient;
 var db_conn_str = process.env.DB_CONN_STR;
@@ -293,11 +292,13 @@ function formObject(req) {
 
       // set user
       let a = validateAuthor(req.body.author).then(author => {
+        console.log("author: ", author);
         objFields.author = author;
       });
 
       // set ingredients
       let i = validateIngredients(req.body.ingredients).then(ingredients => {
+        console.log("ingredients: ", ingredients);
         objFields.ingredients = ingredients;
       });
 
@@ -332,23 +333,26 @@ function formObject(req) {
 
 // Check author against database
 function validateAuthor(uid) {
-  let author = {};
-
+  let admin = require("../firebaseAdmin");
   return new Promise((resolve, reject) => {
-    fetch(APIurl + "user/" + uid)
-      .then(res => {
-        return res.json();
+    var author = {};
+    admin
+      .auth()
+      .getUser(uid)
+      .then(userRecord => {
+        author.uid = userRecord.uid;
+        author.displayName = userRecord.displayName;
+        author.creationTime = userRecord.metadata.creationTime;
       })
-      .then(author_data => {
-        resolve({
-          uid: author_data.uid,
-          displayName: author_data.displayName
-        });
-        reject({
-          uid: uid,
-          displayName: "Unknown"
-        });
+      .catch(err => {
+        console.log("Error fetching user data:", err);
+        res
+          .status(500)
+          .json({ message: "Error fetching author data", error: err });
       });
+
+    resolve(author);
+    reject({ uid: uid });
   });
 }
 
@@ -358,22 +362,36 @@ function validateIngredients(ingredients_array) {
   let requests = [];
 
   // for each ingredient, create a promise to get ingredient data and
-  //   push new data to array of objects with embedded old data.
+  // push new data to array of objects with embedded old data.
   ingredients_array.forEach(i => {
-    let promise = fetch(APIurl + "ingredient/" + i.ingredient)
-      .then(res => {
-        return res.json();
+    let iid = i.ingredient;
+    let ingredientPromise = MongoClient.connect(db_conn_str)
+      .then(db => {
+        let mongodb = require("mongodb");
+        db
+          .db("recipe-studio")
+          .collection("ingredients")
+          .findOne({ _id: new mongodb.ObjectID(iid) })
+          .then(ingredient => {
+            console.log("found ingredient: ", ingredient);
+            ingredients.push({
+              data: ingredient,
+              quantity: i.quantity,
+              units: i.units
+            });
+          })
+          .catch(err => {
+            console.error(err);
+            res.status(500).json({ error: err });
+          });
+        db.close();
       })
-      .then(ingredient_data => {
-        ingredients.push({
-          data: ingredient_data,
-          quantity: i.quantity,
-          units: i.units
-        });
+      .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: err });
       });
-
     // push promise to array of promises
-    requests.push(promise);
+    requests.push(ingredientPromise);
   });
 
   return new Promise((resolve, reject) => {
