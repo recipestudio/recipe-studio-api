@@ -116,6 +116,8 @@ function mongoSearch(req, res, next) {
     searchObj["ingredients.data._id"] = { $all: ingQuery };
   }
 
+  console.log(searchObj);
+
   // connect to db
   try {
     MongoClient.connect(db_conn_str, (err, db) => {
@@ -267,6 +269,7 @@ function mongoPut(req, res, next) {
   });
 }
 
+// form the recipe object to send to database
 function formObject(req) {
   let objFields = {};
   if (req.body.name) {
