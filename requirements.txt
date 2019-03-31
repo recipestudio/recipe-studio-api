@@ -2,3 +2,5 @@ Flask>=1.0.2
 gunicorn>=19.8.1
 python-dotenv>=0.8.2
 pymongo[tls]>=3.7.2
+dnspython>=1.16.0
+
