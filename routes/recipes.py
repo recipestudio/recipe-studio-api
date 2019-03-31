@@ -1,4 +1,4 @@
-from flask import Blueprint, make_response, jsonify
+from flask import Blueprint, jsonify, make_response, request
 import json
 
 recipe = Blueprint('recipe_route', __name__)
@@ -40,13 +40,12 @@ def manage_recipe(recipe_id):
     else:
         return make_response('Malformed request', 400)
 
-
 # recipe methods
 def get_recipe(id):
-    return 'fetched'
+    return 'fetched {}'.format(id)
 
 def update_recipe(id):
-    return 'updated'
+    return 'updated {}'.format(id)
 
 def delete_recipe(id):
-    return 'deleted'
+    return 'deleted {}'.format(id)

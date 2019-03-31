@@ -1,12 +1,15 @@
 from flask import Flask, make_response
-from routes.recipes import recipe
+from routes import recipes, ingredients, users
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=None)
 app.config.update({
     'DEBUG': True
 })
 
-app.register_blueprint(recipe, url_prefix='/recipe')
+app.register_blueprint(recipes.recipe, url_prefix='/recipe')
+app.register_blueprint(ingredients.ingredient, url_prefix='/ingredient')
+app.register_blueprint(users.user, url_prefix='/user')
+
 
 @app.route('/')
 def index():
