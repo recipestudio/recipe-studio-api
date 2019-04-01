@@ -1,10 +1,13 @@
 from flask import Flask, make_response
 from routes import recipes, ingredients, users
+import os
 
 app = Flask(__name__, static_folder=None)
 app.config.update({
     'DEBUG': True
 })
+
+_PORT = os.environ.get('PORT') or 5002
 
 app.register_blueprint(recipes.recipe, url_prefix='/recipe')
 app.register_blueprint(ingredients.ingredient, url_prefix='/ingredient')
@@ -15,6 +18,7 @@ app.register_blueprint(users.user, url_prefix='/user')
 def index():
     return make_response('hello world', 200)
 
+
 # Run the thing
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=_PORT)
