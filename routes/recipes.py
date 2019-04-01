@@ -1,9 +1,8 @@
 from flask import Blueprint, jsonify, make_response, request
 from pymongo import MongoClient
-from bson.objectid import ObjectId
-import json, os
-
-DB_CONN_STR = ''
+from bson import objectid, json_util
+import json
+import os
 
 # setup mongo client
 # connect to mongo and get collection
@@ -17,6 +16,7 @@ _RECIPES = _DB[RECIPE_COL]
 
 # setup route blueprint
 recipe = Blueprint('recipe_route', __name__)
+
 
 @recipe.route('/')
 def default():
@@ -55,23 +55,27 @@ def manage_recipe(recipe_id):
     else:
         return make_response('Malformed request', 400)
 
-# recipe methods
+
 def get_recipe(r_id):
-    result = _RECIPES.find_one({'_id': ObjectId(r_id)})
+    result = _RECIPES.find_one({'_id': objectid.ObjectId(r_id)})
     print(result)
+    json_result = json.dumps(
+        result, default=json_util.default)  # .decode('UTF-8')
     if result is not None:
-        return make_response(
-            jsonify(result), 200
-        )
+        response = make_response(json_result, 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
     else:
         return make_response(
             jsonify({
-                'message': 'Recipe ' + r_id + ' not found' 
+                'message': 'Recipe ' + r_id + ' not found'
             }), 404
         )
 
+
 def update_recipe(r_id):
     return 'updated {}'.format(r_id)
+
 
 def delete_recipe(r_id):
     return 'deleted {}'.format(r_id)
