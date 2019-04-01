@@ -7,7 +7,7 @@ app.config.update({
     'DEBUG': True
 })
 
-_PORT = os.environ.get('PORT') or 5002
+_PORT = os.getenv('PORT')
 
 app.register_blueprint(recipes.recipe, url_prefix='/recipe')
 app.register_blueprint(ingredients.ingredient, url_prefix='/ingredient')
