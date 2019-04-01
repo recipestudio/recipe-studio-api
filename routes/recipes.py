@@ -33,6 +33,7 @@ class Recipe:
     name = ''
 
     def __init__(self, author, created, description, directions, image, ingredients, name):
+        self.author = author
         self.created = created
         self.description = description
         self.directions = directions
@@ -40,11 +41,7 @@ class Recipe:
         self.name = name
 
         # TODO: add Ingredient object parsing here.
-
-        for ingredient in ingredients:
-            self.ingredients.append(ingredient)
-
-        self.author = author
+        self.ingredients = ingredients
 
     def to_dict(self):
         _dict = {}
@@ -98,6 +95,25 @@ recipe = Blueprint('recipe_route', __name__)
 def default():
     return make_response('Malformed request', 400)
 
+# Fetch, update, delete recipe
+@recipe.route('/<recipe_id>', methods=['GET', 'PUT', 'DELETE'])
+def manage_recipe(recipe_id):
+
+    response = {}
+    if request.method == 'GET':
+        response = get_one_recipe(recipe_id)
+    elif request.method == 'PUT':
+        response = update_recipe(recipe_id)
+    elif request.method == 'DELETE':
+        response = delete_recipe(recipe_id)
+    else:
+        response = make_response('Malformed request', 400)
+
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers['Content-Type'] = 'application/json'
+    return response
+
+
 # Get all recipes
 @recipe.route('/all', methods=['GET'])
 def get_all_recipes():
@@ -136,38 +152,20 @@ def create_recipe():
     response.headers['Content-Type'] = 'application/json'
     return response
 
-# Fetch, update, delete recipe
-@recipe.route('/<recipe_id>', methods=['GET', 'PUT', 'DELETE'])
-def manage_recipe(recipe_id):
 
-    response = {}
-    if request.method == 'GET':
-        response = get_recipe(recipe_id)
-    elif request.method == 'PUT':
-        response = update_recipe(recipe_id)
-    elif request.method == 'DELETE':
-        response = delete_recipe(recipe_id)
-    else:
-        response = make_response('Malformed request', 400)
-
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    response.headers['Content-Type'] = 'application/json'
-    return response
-
-
-def get_recipe(r_id):
+def get_one_recipe(r_id):
     result = _RECIPES.find_one({'_id': objectid.ObjectId(r_id)})
     if result is not None:
         formatted_result = read_bson(result)
         response = make_response(jsonify(formatted_result), 200)
-        response.headers['Content-Type'] = 'application/json'
-        return response
     else:
-        return make_response(
+        response = make_response(
             jsonify({
                 'message': 'Recipe ' + r_id + ' not found'
             }), 404
         )
+
+    return response
 
 
 def update_recipe(r_id):
@@ -184,10 +182,10 @@ def read_bson(bson_data):
 
     # extract data from bson and import to local Recipe object
     author = bson_data['author']
+    created = bson_data['created']
     description = bson_data['description']
     directions = bson_data['directions']
     name = bson_data['name']
-    created = bson_data['created']
     image = bson_data['image']
     r_id = bson_data['_id']
 
@@ -202,7 +200,7 @@ def read_bson(bson_data):
     recipe_dict = recipe_obj.to_dict()
 
     # print('JSON')
-    # pprint(recipe_json)
+    # pprint(recipe_dict)
     return recipe_dict
 
 
