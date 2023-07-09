@@ -1,12 +1,12 @@
-from bson import objectid, json_util
-from flask import Blueprint, make_response, request
-from pprint import pprint
-from pymongo import MongoClient
-
-import datetime
 import json
 import os
 
+from bson import objectid, json_util
+from flask import Blueprint, make_response, request
+from pymongo import MongoClient
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Recipe:
     """
@@ -76,11 +76,11 @@ DB_CONN_STR = os.getenv('DB_CONN_STR')
 DB_NAME = os.getenv('DB_NAME')
 RECIPE_COL = os.getenv('RECIPE_COL_NAME')
 
-if (DB_CONN_STR is None):
+if DB_CONN_STR is None:
     raise DbConnError('Variable DB_CONN_STR is not set')
-if (DB_NAME is None):
+if DB_NAME is None:
     raise DbConnError('Variable DB_NAME is not set')
-if (RECIPE_COL is None):
+if RECIPE_COL is None:
     raise DbConnError('Variable RECIPE_COL is not set')
 
 _mongoclient = MongoClient(DB_CONN_STR)
@@ -125,7 +125,7 @@ def get_all_recipes():
         results.append(formatted_result)
 
     response = {}
-    if result is not None:
+    if results is not None:
         response = make_response(jsonify(results), 200)
     else:
         response = make_response(jsonify({}), 404)
@@ -169,11 +169,11 @@ def get_one_recipe(r_id):
 
 
 def update_recipe(r_id):
-    return 'updated {}'.format(r_id)
+    return f'updated {r_id}'
 
 
 def delete_recipe(r_id):
-    return 'deleted {}'.format(r_id)
+    return f'deleted {r_id}'
 
 
 def read_bson(bson_data):

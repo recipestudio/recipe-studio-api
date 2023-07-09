@@ -1,12 +1,12 @@
-from bson import errors, json_util, objectid
-from flask import Blueprint, make_response, request
-from pprint import pprint
-from pymongo import MongoClient
-
-import datetime
 import json
 import os
 
+from bson import errors, json_util, objectid
+from flask import Blueprint, make_response
+from pymongo import MongoClient
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Ingredient:
     """
@@ -89,7 +89,7 @@ def get_all_ingredients():
         results.append(formatted_result)
 
     response = {}
-    if result is not None:
+    if results is not None:
         response = make_response(jsonify(results), 200)
     else:
         response = make_response(jsonify({}), 404)

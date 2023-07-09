@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, make_response, request
-import json
+from dotenv import load_dotenv
+
+load_dotenv()
 
 user = Blueprint('user_route', __name__)
 
@@ -27,11 +29,11 @@ def manage_user(user_id):
         return make_response('Malformed request', 400)
 
 # user methods
-def get_user(id):
-    return 'fetched {}'.format(id)
+def get_user(user_id):
+    return f'fetched {user_id}'
 
-def update_user(id):
-    return 'updated {}'.format(id)
+def update_user(user_id):
+    return f'updated {user_id}'
 
-def delete_user(id):
-    return 'deleted {}'.format(id)
+def delete_user(user_id):
+    return f'deleted {user_id}'
